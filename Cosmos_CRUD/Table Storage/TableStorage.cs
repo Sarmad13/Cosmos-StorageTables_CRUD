@@ -33,6 +33,7 @@ namespace Cosmos_CRUD.Table_Storage
         }
         public async Task<List<Employee>> GetData(string key,string value)
         {
+            // Here can retrieve TableOperation.retrieve
             string filter = TableQuery.GenerateFilterCondition(key, QueryComparisons.Equal,value);
             TableQuery<Employee> tableQuery = new TableQuery<Employee>().Where(filter);
             var employees = await Table.ExecuteQuerySegmentedAsync(tableQuery, null);
