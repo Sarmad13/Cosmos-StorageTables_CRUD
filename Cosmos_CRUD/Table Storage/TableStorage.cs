@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Azure.Data.Tables;
 namespace Cosmos_CRUD.Table_Storage
 {
-    public class TableStorage
+    public class TableStorage : ITableStorage
     {
         public CloudStorageAccount Account { get; set; }
         public CloudTableClient Client { get; set; }
@@ -31,10 +31,10 @@ namespace Cosmos_CRUD.Table_Storage
             TableOperation insertOperation = TableOperation.InsertOrReplace(employee);
             Table.ExecuteAsync(insertOperation);
         }
-        public async Task<List<Employee>> GetData(string key,string value)
+        public async Task<List<Employee>> GetData(string key, string value)
         {
             // Here can retrieve TableOperation.retrieve
-            string filter = TableQuery.GenerateFilterCondition(key, QueryComparisons.Equal,value);
+            string filter = TableQuery.GenerateFilterCondition(key, QueryComparisons.Equal, value);
             TableQuery<Employee> tableQuery = new TableQuery<Employee>().Where(filter);
             var employees = await Table.ExecuteQuerySegmentedAsync(tableQuery, null);
             return employees.Results;

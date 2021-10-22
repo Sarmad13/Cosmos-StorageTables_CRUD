@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cosmos_CRUD.DataAccess;
 using Cosmos_CRUD.DataAccess.Utility;
+using Cosmos_CRUD.Table_Storage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -38,6 +39,7 @@ namespace Cosmos_CRUD
 
             services.AddTransient<ICosmosConnection, CosmosConnection>();
             services.AddTransient<ICosmosDataAdapter, CosmosDataAdapter>();
+            services.AddTransient<ITableStorage, TableStorage>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

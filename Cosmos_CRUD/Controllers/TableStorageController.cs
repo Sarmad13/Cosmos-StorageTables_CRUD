@@ -11,10 +11,10 @@ namespace Cosmos_CRUD.Controllers
     [ApiController]
     public class TableStorageController : Controller
     {
-        TableStorage tableStorage;
-        public TableStorageController()
+       private ITableStorage tableStorage;
+        public TableStorageController(ITableStorage _tableStorage)
         {
-            tableStorage = new TableStorage();
+            tableStorage = _tableStorage;
 
         }
         [HttpGet("addTable")]
