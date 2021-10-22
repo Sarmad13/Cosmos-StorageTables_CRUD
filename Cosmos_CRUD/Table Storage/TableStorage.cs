@@ -19,36 +19,30 @@ namespace Cosmos_CRUD.Table_Storage
             Client = Account.CreateCloudTableClient();
             Table = Client.GetTableReference("Employee");
 
-            var serviceClient = new TableServiceClient("DefaultEndpointsProtocol=https;AccountName=storagetablesample;AccountKey=E28+trOE/FQYpBzGbbEPP9puAMdkwkbAJxO6uW9N7xdqubw2yKYLOMtGVSwaSz5exmJe5kim4VRD9SgmPsto1w==;EndpointSuffix=core.windows.net");
-            tableClient = serviceClient.GetTableClient("Employee");
+            //var serviceClient = new TableServiceClient("DefaultEndpointsProtocol=https;AccountName=storagetablesample;AccountKey=E28+trOE/FQYpBzGbbEPP9puAMdkwkbAJxO6uW9N7xdqubw2yKYLOMtGVSwaSz5exmJe5kim4VRD9SgmPsto1w==;EndpointSuffix=core.windows.net");
+            //tableClient = serviceClient.GetTableClient("Employee");
         }
         public void AddTable()
         {
             Table.CreateIfNotExistsAsync();
-            Employee employeeEntity = new Employee("Sarmad", "Saeed")
-            {
-                Email = "mohd@sbeeh.com",
-                PhoneNumber = "123456789"
-
-            };
-            TableOperation insertOperation = TableOperation.Insert(employeeEntity);
-            Table.ExecuteAsync(insertOperation);
-
         }
-        //public async Task<IEnumerable<Employee>> GetData()
-        //{
-        //    TableContinuationToken token = null;
-        //    do
-        //    {
-        //        var o= tableClient.query<Employee>(ent => ent.PartitionKey.Equals("ThanksApp"));
-        //        var q = new TableQuery<Employee>();
-        //        var queryResult = await Table.ExecuteQuerySegmentedAsync(q, token);
-        //        foreach (var item in queryResult.Results)
-        //        {
-        //            yield return item;
-        //        }
-        //        token = queryResult.ContinuationToken;
-        //    } while (token != null);
-        //}
+        public void insertEmployee(Employee employee)
+        {
+            TableOperation insertOperation = TableOperation.InsertOrReplace(employee);
+            Table.ExecuteAsync(insertOperation);
+        }
+        public async Task<List<Employee>> GetData(string key,string value)
+        {
+            string filter = TableQuery.GenerateFilterCondition(key, QueryComparisons.Equal,value);
+            TableQuery<Employee> tableQuery = new TableQuery<Employee>().Where(filter);
+            var employees = await Table.ExecuteQuerySegmentedAsync(tableQuery, null);
+            return employees.Results;
+        }
+        public async Task<dynamic> DeleteData(Employee employee)
+        {
+            TableOperation replaceOperation = TableOperation.Delete(employee);
+            var obj = Table.ExecuteAsync(replaceOperation);
+            return obj.Result;
+        }
     }
 }
